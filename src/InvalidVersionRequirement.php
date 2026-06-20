@@ -1,0 +1,44 @@
+<?php declare(strict_types=1);
+/*
+ * This file is part of sebastian/version-string.
+ *
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+namespace SebastianBergmann\VersionString;
+
+/**
+ * @immutable
+ *
+ * @no-named-arguments
+ */
+final readonly class InvalidVersionRequirement extends Requirement
+{
+    /**
+     * @var non-empty-string
+     */
+    private string $message;
+
+    /**
+     * @param non-empty-string $message
+     */
+    public function __construct(string $message)
+    {
+        $this->message = $message;
+    }
+
+    public function isSatisfiedBy(string $version): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function asString(): string
+    {
+        return $this->message;
+    }
+}

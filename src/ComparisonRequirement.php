@@ -1,0 +1,44 @@
+<?php declare(strict_types=1);
+/*
+ * This file is part of sebastian/version-string.
+ *
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+namespace SebastianBergmann\VersionString;
+
+use function version_compare;
+
+/**
+ * @immutable
+ *
+ * @no-named-arguments
+ */
+final readonly class ComparisonRequirement extends Requirement
+{
+    private string $version;
+    private VersionComparisonOperator $operator;
+
+    public function __construct(string $version, VersionComparisonOperator $operator)
+    {
+        $this->version  = $version;
+        $this->operator = $operator;
+    }
+
+    public function isSatisfiedBy(string $version): bool
+    {
+        return version_compare($version, $this->version, $this->operator->asString());
+    }
+
+    public function asString(): string
+    {
+        return $this->operator->asString() . ' ' . $this->version;
+    }
+
+    public function version(): string
+    {
+        return $this->version;
+    }
+}
