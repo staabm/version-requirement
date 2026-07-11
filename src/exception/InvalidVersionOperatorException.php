@@ -21,7 +21,7 @@ final class InvalidVersionOperatorException extends RuntimeException implements 
     {
         parent::__construct(
             sprintf(
-                '"%s" is not a valid version_compare() operator',
+                '"%s" is not a valid version_compare() operator: expected one of "<", "lt", "<=", "le", ">", "gt", ">=", "ge", "==", "=", "eq", "!=", "<>", "ne"',
                 $operator,
             ),
         );

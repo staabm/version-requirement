@@ -35,9 +35,21 @@ final readonly class InvalidVersionRequirement extends Requirement
     }
 
     /**
+     * Unlike the other implementations of Requirement, this method does not return
+     * a string representation of a version requirement: it returns the message that
+     * explains why the version requirement is invalid.
+     *
      * @return non-empty-string
      */
     public function asString(): string
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function message(): string
     {
         return $this->message;
     }

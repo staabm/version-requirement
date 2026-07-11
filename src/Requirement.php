@@ -47,10 +47,23 @@ abstract readonly class Requirement
             }
         }
 
-        throw new InvalidVersionRequirementException;
+        throw new InvalidVersionRequirementException($versionRequirement);
     }
 
     abstract public function isSatisfiedBy(string $version): bool;
 
     abstract public function asString(): string;
+
+    /**
+     * Returns false when this requirement is a version comparison and its version
+     * does not consist of major, minor, and patch level ("8.5" instead of "8.5.0",
+     * for example).
+     *
+     * Comparing an incomplete version may not behave as intended:
+     * version_compare('8.5.0', '8.5', '<=') is false, for example.
+     */
+    public function isComplete(): bool
+    {
+        return true;
+    }
 }

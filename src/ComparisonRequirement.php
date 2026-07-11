@@ -9,6 +9,7 @@
  */
 namespace SebastianBergmann\VersionRequirement;
 
+use function substr_count;
 use function version_compare;
 
 /**
@@ -52,5 +53,10 @@ final readonly class ComparisonRequirement extends Requirement
     public function version(): string
     {
         return $this->version;
+    }
+
+    public function isComplete(): bool
+    {
+        return substr_count($this->version, '.') === 2;
     }
 }

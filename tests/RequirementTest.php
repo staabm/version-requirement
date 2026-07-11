@@ -20,8 +20,8 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Requirement::class)]
 #[CoversClass(ComparisonRequirement::class)]
 #[CoversClass(ConstraintRequirement::class)]
+#[CoversClass(InvalidVersionRequirementException::class)]
 #[UsesClass(VersionComparisonOperator::class)]
-#[UsesClass(InvalidVersionRequirementException::class)]
 #[Small]
 final class RequirementTest extends TestCase
 {
@@ -49,6 +49,21 @@ final class RequirementTest extends TestCase
             ['1.0.0', '=', '1.0.1', false],
             ['1.0.0', '>=', '1.0.1', true],
             ['1.0.0', '>=', '0.9.0', false],
+        ];
+    }
+
+    /**
+     * @return non-empty-list<array{non-empty-string, bool}>
+     */
+    public static function completenessProvider(): array
+    {
+        return [
+            ['>= 8.5.0', true],
+            ['>= 8.5', false],
+            ['<= 8', false],
+            ['8.5.0', true],
+            ['^8.5', true],
+            ['8.5.*', true],
         ];
     }
 
@@ -81,8 +96,19 @@ final class RequirementTest extends TestCase
     public function testCannotBeCreatedFromInvalidString(): void
     {
         $this->expectException(InvalidVersionRequirementException::class);
+        $this->expectExceptionMessage('"invalid" is not a valid version requirement: expected a version constraint (such as "^8.1", "~8.1.0", or "8.1.*") or a version comparison (such as ">= 8.1.0")');
 
         Requirement::from('invalid');
+    }
+
+    /**
+     * @param non-empty-string $versionRequirement
+     */
+    #[DataProvider('completenessProvider')]
+    #[TestDox('Version requirement "$versionRequirement" is complete: $complete')]
+    public function testCanBeCheckedForCompleteness(string $versionRequirement, bool $complete): void
+    {
+        $this->assertSame($complete, Requirement::from($versionRequirement)->isComplete());
     }
 
     #[DataProvider('constraintProvider')]
